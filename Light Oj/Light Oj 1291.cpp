@@ -1,3 +1,31 @@
+/* 
+prerequisites : bridge concept , graph component concept , bfs/dfs
+
+Idea : 
+1 . Nodes that are connected  without bridgs form a srongly connencted component . 
+2 . You may get one or more such components 
+3 . Now consider these components as NODES and imagine a graph with these NODES .
+4 . Let's name this new graph "G"
+5 . In graph "G" , edges are basically bridges of the original graph . You can see that your new graph is actually a tree!(If you are clear about bridge you can easily get this)
+6 . Now you have to make this new graph cyclic  . Means , you have to make all the leaves connected with each other .
+7 . Suppse you have a tree 
+
+a - b
+a - c
+c - d
+c - e
+
+How many new minimum edges you need to make this graph connected in a way that even if you remove  exactly one edge , this graph  will remain connected ?? 
+
+ans is 2 !
+
+Because you have 3 leaves here and you need to add just 2 extra edge.
+
+Now suppose , there are N leavese . How many edges you need then ??
+
+8. Basically this is the idea !
+
+*/
 
 #include<bits/stdc++.h>
 using namespace std;
