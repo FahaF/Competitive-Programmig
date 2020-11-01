@@ -1,0 +1,124 @@
+ll s[MAX],t[MAX],ft[MAX],timer;
+ 
+vl ad[MAX];
+ 
+ll blocksize,cnt[MAX],ar[MAX],res,mx,sum[MAX],frq[MAX],kota[MAX];
+mapll mpt,mpp;
+ 
+ 
+void dfs(ll u, ll par)
+{
+   
+    s[u] = timer;
+    ft[timer] = u;
+    timer++;
+    for(auto x : ad[u])
+    {
+        if(x!=par)dfs(x,u);
+    }
+    t[u] = timer;
+    ft[timer] = u;
+    timer++;
+}
+ 
+ 
+ 
+struct query
+{
+    ll left,right,idx,blk,id;
+} Q[200009];
+ 
+void add(ll x)
+{
+    if(kota[x])
+    {
+        sum[kota[x]] -= x;
+        frq[kota[x]]--;
+    }
+    kota[x]++;
+    frq[kota[x]]++;
+    sum[kota[x]] += x;
+    mx = max(mx,kota[x]);
+}
+ 
+void rem(ll x)
+{
+ 
+    sum[kota[x]] -= x;
+    frq[kota[x]]--;
+    kota[x]--;
+    if(kota[x])
+    {
+        frq[kota[x]]++;
+        sum[kota[x]] += x;
+    }
+    if(frq[mx] == 0)mx--;
+}
+ 
+int main()
+{
+ 
+    ll i,j,k,l,m,n,u,v,cl,cr;
+ 
+ 
+    sfl(n);
+ 
+    blocksize = sqrt(n);
+ 
+    for(i=0; i<n; i++)cin >> ar[i];
+ 
+    for(i=0; i<n-1; i++)
+    {
+        sfl(u),sfl(v);
+        u--,v--;
+        ad[u].pb(v);
+        ad[v].pb(u);
+    }
+ 
+    dfs(0,-1);
+ 
+ 
+ 
+    for(i=0; i<n; i++)
+    {
+ 
+        Q[i].left = s[i];
+        Q[i].right = t[i];
+        Q[i].blk = Q[i].left/blocksize;
+        Q[i].id = i;
+    }
+ 
+    sort(Q,Q+n,[](query &a,query &b)
+    {
+        if(a.blk != b.blk)
+            return a.blk<b.blk;
+        return a.right<b.right;
+    });
+ 
+    cl = 0;
+    cr = -1;
+ 
+    vl ans(n);
+ 
+    for(i=0; i<n; i++)
+    {
+ 
+        while(cr < Q[i].right)
+            cr++,add(ar[ft[cr]]);
+        while(cr > Q[i].right)
+            rem(ar[ft[cr]]),cr--;
+        while(cl > Q[i].left)
+            cl--,add(ar[ft[cl]]);
+        while(cl < Q[i].left)
+            rem(ar[ft[cl]]),cl++;
+ 
+        ans[Q[i].id] = sum[mx];
+    }
+ 
+ 
+    for(i=0;i<n;i++)cout << ans[i] << " " ;
+ 
+    cout << endl;
+ 
+ 
+}

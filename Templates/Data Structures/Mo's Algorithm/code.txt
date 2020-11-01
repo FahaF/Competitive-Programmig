@@ -1,0 +1,51 @@
+* Handles offline query in O(Q \sqrt{N})
+* Maintain proper block_sz ~ \sqrt{N}
+* Careful with < in query
+* Query indices are presumed to be 0-indexed
+* Array indices are also 0-indexed**/
+
+
+const int block_sz = 550; // N ~ 3e5
+int freq[N], mo_cnt = 0;
+int ret[N];
+inline void add(int idx)
+{
+    ++freq[a[idx]];
+    if(freq[a[idx]] == 1) ++mo_cnt;
+}
+inline void erase(int idx)
+{
+    --freq[a[idx]];
+    if(freq[a[idx]] == 0) --mo_cnt;
+}
+
+inline int get_ans()
+{
+    return mo_cnt;
+}
+struct query
+{
+    int l, r, idx;
+    query() { }
+    query(int _l, int _r, int _i) : l(_l), r(_r), idx(_i) {}
+    bool operator < (const query &p) const
+    {
+        if(l/block_sz != p.l/block_sz) return l < p.l;
+        return ((l/block_sz) & 1) ? r > p.r : r < p.r;
+    }
+};
+void mo(vector<query> &q)
+{
+    sort(q.begin(), q.end());
+    memset(ret, -1, sizeof ret);
+
+    int l = 0, r = -1;
+    for(auto &qq : q)
+    {
+        while(qq.l < l) add(--l);
+        while(qq.r > r) add(++r);
+        while(qq.l > l) erase(l++);
+        while(qq.r < r) erase(r--);
+        ret[qq.idx] = max(ret[qq.idx], get_ans());
+    }
+}

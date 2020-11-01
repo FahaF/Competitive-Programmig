@@ -1,0 +1,201 @@
+
+--------------------------------------------------------------------------------------------
+Some inputs strings are given. If there is any common prefix then answer should be "N0"
+
+--------------------------------------------------------------------------------------------
+#include<bits/stdc++.h>
+using namespace std;
+
+#define maxn 10000
+const int SIZE=maxn*10;
+
+//trie
+int sz=1;
+struct node
+{
+    int pre,edword;
+    int nxt[10];
+};
+int has(char ch)
+{
+    return (ch-'0');
+}
+
+node trie[SIZE+1];
+bool add(string s)
+{
+    int i,p=1;
+    int _size = s.size();
+    for(i=0; i<_size; i++)
+    {
+        if(trie[p].edword)
+            return false;
+        if(!trie[p].nxt[has(s[i])])
+            trie[p].nxt[has(s[i])] = ++sz;
+        p = trie[p].nxt[has(s[i])];
+        trie[p].pre++;
+    }
+    if(trie[p].edword)
+        return false;
+    trie[p].edword++;
+    return true;
+}
+int main()
+{
+    int T;
+    cin>>T;
+    for(int kase=1; kase<=T; kase++)
+    {
+        int n;
+        scanf("%d",&n);
+        memset(trie,0,sizeof(trie));
+        sz = 1;
+        string s[10008];
+        bool ok=true;
+        for(int i=0; i<n; i++)
+        {
+            cin>>s[i];
+        }
+        sort(s,s+n);
+
+        for(int i=0; i<n; i++)
+        {
+            ok &= add(s[i]);
+        }
+        if(ok)
+            printf("Case %d: YES\n",kase);
+        else
+            printf("Case %d: NO\n",kase);
+    }}
+
+--------------------------------------------------------------------------------------------
+
+Onekgula input string e kon set nile (prefix length * set e total string) max hobe.
+
+--------------------------------------------------------------------------------------------
+#define maxn 50000
+const int SIZE=maxn*50;
+int n;
+int best,sz;
+struct node
+{
+    int pre,edword;
+    int nxt[4];
+};
+int has(char ch)
+{
+    if(ch=='A')return 0;
+    if(ch=='G')return 1;
+    if(ch=='C')return 2;
+    return 3;
+}
+node trie[SIZE+1];
+void add(string s)
+{
+    int i,p=1;
+    int _size = s.size();
+    for(i=0; i<_size; i++)
+    {
+        if(!trie[p].nxt[has(s[i])])
+            trie[p].nxt[has(s[i])] = ++sz;
+        p = trie[p].nxt[has(s[i])];
+        trie[p].pre++;
+    }
+    trie[p].edword++;
+}
+void dfs(int level,int p)
+{
+    if(!p)
+        return;
+    best = max(best,level*trie[p].pre); // eikhane level holo koddur prefix matched. Ar pre holo odddur e koi //ta string ase.
+    for(int i =0; i<4; i++)
+    {
+        dfs(level+1,trie[p].nxt[i]);
+    }
+}
+int main()
+{
+    int T;
+    cin>>T;
+    for(int kase=1; kase<=T; kase++)
+    {
+        scanf("%d",&n);
+        memset(trie,0,sizeof(trie));
+        sz = 1;
+        string s;
+        for(int i=1; i<=n; i++)
+        {
+            cin>>s;
+            add(s);
+        }
+        best = 0;
+        dfs(0,1);
+       printf("Case %d: %lld\n",kase,best);
+    }}
+
+
+--------------------------------------------------------------------------------------------------------
+Given an array of positive integers you have to print the number of subarrays whose XOR is less than K.
+
+--------------------------------------------------------------------------------------------------------
+
+#define maxn 50000
+const int SIZE=maxn*50;
+int n;
+int best,sz;
+struct node
+{
+    int pre,edword;
+    int nxt[4];
+};
+int has(char ch)
+{
+    if(ch=='A')return 0;
+    if(ch=='G')return 1;
+    if(ch=='C')return 2;
+    return 3;
+}
+node trie[SIZE+1];
+void add(string s)
+{
+    int i,p=1;
+    int _size = s.size();
+    for(i=0; i<_size; i++)
+    {
+        if(!trie[p].nxt[has(s[i])])
+            trie[p].nxt[has(s[i])] = ++sz;
+        p = trie[p].nxt[has(s[i])];
+        trie[p].pre++;
+    }
+    trie[p].edword++;
+}
+
+void dfs(int level,int p)
+{
+    if(!p)
+        return;
+    best = max(best,level*trie[p].pre);
+    for(int i =0; i<4; i++)
+    {
+        dfs(level+1,trie[p].nxt[i]);
+    }
+}
+int main()
+{
+    int T;
+    cin>>T;
+    for(int kase=1; kase<=T; kase++)
+    {
+        scanf("%d",&n);
+        memset(trie,0,sizeof(trie));
+        sz = 1;
+        string s;
+        for(int i=1; i<=n; i++)
+        {
+            cin>>s;
+            add(s);
+        }
+      best = 0;
+        dfs(0,1);
+       printf("Case %d: %lld\n",kase,best);
+    }}

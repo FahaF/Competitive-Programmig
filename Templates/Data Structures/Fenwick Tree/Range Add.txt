@@ -1,0 +1,4 @@
+void range_add(int l, int r, int val) {
+    add(l, val);
+    add(r + 1, -val);
+}
