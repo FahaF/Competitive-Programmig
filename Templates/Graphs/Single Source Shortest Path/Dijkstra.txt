@@ -1,0 +1,36 @@
+vector<pll>ad[MAX+10];
+
+ll d[MAX];
+
+void dijkstra()
+{
+
+    priority_queue<pll,vector<pll>,greater<pll> >q;
+
+    q.push({0,a});
+
+    ll u,co;
+
+    while(!q.empty())
+    {
+        u = q.top().S;
+        co = q.top().F;
+
+
+        q.pop();
+
+        if(co>d[u])continue;
+
+        for(auto x : ad[u])
+        {
+            l = x.S;
+            v = x.F;
+
+            if(d[v] > l+co)
+            {
+                d[v]  = l+co;
+                q.push({d[v],v});
+            }
+        }
+    }
+}

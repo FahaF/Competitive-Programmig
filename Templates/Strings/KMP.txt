@@ -1,0 +1,64 @@
+
+
+//t = text
+//p = pattern
+// prefix[i] means
+
+
+string t,p;
+vector<int>pos;
+vector<int>prefix;
+
+
+void com_pre()
+{
+    int m = p.size();
+    prefix.push_back(0);
+    int i=1,len=0;
+    while(i<m)
+    {
+        if(p[i]==p[len])
+        {
+            len++;
+            prefix.push_back(len);
+            i++;
+        }
+        else
+        {
+            if(len!=0)
+                len = prefix[len-1];
+            else
+                prefix.push_back(0);
+            i++;
+        }
+    }
+}
+void KMP()
+{
+    int i=0,j=0;
+    while(i<t.size())
+    {
+        if(t[i]==p[j])
+            i++,j++;
+        if(j==p.size())
+        {
+            pos.push_back(i-j);
+            j = prefix[j-1];
+        }
+        if(t[i]!=p[j])
+        {
+            if(j!=0)j=prefix[j-1];
+            else i++;
+        }
+    }
+}
+int main()
+{
+    cin>>t;
+    cin>>p;
+    com_pre();
+    KMP();
+    for(auto x : prefix)   cout<<x<<" ";
+    cout << endl;
+    for(int i=0; i<pos.size(); i++)cout<<pos[i]<<" ";
+}

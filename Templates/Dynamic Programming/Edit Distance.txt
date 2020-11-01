@@ -1,0 +1,35 @@
+complexity : O(n*m)
+
+
+#include<bits/stdc++.h>
+using namespace std;
+int dp[2000][2000];
+int visited[2000][2000];
+string a,b;
+int min(int x, int y, int z)
+{
+    return min(min(x, y), z);
+}
+int edit_d(int i,int j)
+{
+    int ans=0;
+    if(visited[i][j])return dp[i][j];
+    if(i==a.size())return (b.size()-j);
+    if(j==b.size())return (a.size()-i);
+    if(a[i]==b[j])ans = edit_d(i+1,j+1);
+    else ans=1+min(edit_d(i+1,j+1),edit_d(i+1,j),edit_d(i,j+1));
+    visited[i][j]=1;
+    dp[i][j]=ans;
+    return dp[i][j];
+}
+int main()
+{
+    int t;
+    cin>>t;
+    while(t--) {
+        memset(visited,0,sizeof visited);
+        cin>>a>>b;
+        int res=edit_d(0,0);
+        cout<<res<<endl;
+    }
+}

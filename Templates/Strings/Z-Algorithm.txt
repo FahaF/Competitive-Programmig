@@ -1,0 +1,35 @@
+//z[i] is the length of the longest common prefix between s and the suffix of s starting at i.
+//"aaaaa" - [0,4,3,2,1]
+//"aaabaab" - [0,2,1,0,2,1,0]
+//"abacaba" - [0,0,1,0,3,0,1]
+//z[0]=0 or full length of string
+
+
+void zfunction(string &s)
+{
+    ll n = s.size();
+    z[0] = n; //if you want that the whole string // is a substring of itself.
+    ll L = 0, R = 0;
+    for (int i = 1; i < n; i++)
+    {
+        if (i > R)
+        {
+            L = R = i;
+            while (R < n &&s[R-L] == s[R]) R++;
+            z[i] = R-L;
+            R--;
+        }
+        else
+        {
+            int k = i-L;
+            if (z[k] < R-i+1) z[i] = z[k];
+            else
+            {
+                L = i;
+                while (R < n &&s[R-L] == s[R]) R++;
+                z[i] = R-L;
+                R--;
+            }
+        }
+    }
+}

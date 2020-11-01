@@ -1,0 +1,20 @@
+* Complexity : v*e
+* d[] distance array from root
+* edges is a struct having a,b,cost. Means, information of the edge 
+
+
+for (int i = 0; i < n; ++i) {
+        x = -1;
+        for (Edge e : edges) {
+            if (d[e.a] + e.cost < d[e.b]) {
+                d[e.b] = d[e.a] + e.cost;
+                p[e.b] = e.a;
+                x = e.b;
+            }
+        }
+    }
+
+    if (x != -1) {
+        cout << "negative cycle found.";
+    }
+

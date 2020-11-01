@@ -1,0 +1,53 @@
+complexity : each query O(logN).
+
+
+int lim = ceil(log2(MAX));
+
+int up[MAX][lim];
+
+int timer;
+
+int in[MAX],out[MAX];
+
+int dis[MAX];
+
+void dfs(int u,int par,int d)
+{
+
+    in[u] = ++timer;
+    up[u][0] = par;
+    dis[u] = d;
+
+    for(int i=1;i<=lim;i++)
+    {
+        up[u][i] = up[up[u][i-1]][i-1];
+    }
+
+    for(auto x : ad[u])
+    {
+        if(x!=par)
+        {
+            dfs(x,u,d+1);
+        }
+    }
+    out[u] = ++timer;
+
+}
+
+bool is(int u,int v)
+{
+    return (in[u]<=in[v] && out[u]>=out[v]);
+}
+
+int lca(int u,int v)
+{
+    if(is(u,v))return u;
+    if(is(v,u))return v;
+
+    for(int i=lim;i>=0;i--)
+    {
+        if(!is(up[u][i],v))u = up[u][i];
+    }
+
+    return up[u][0];
+}

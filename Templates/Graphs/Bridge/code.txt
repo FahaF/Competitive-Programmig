@@ -1,0 +1,45 @@
+* There is a back edge means there is a cycle
+* back edge connets the current vertex to the vertes in the recursion stack
+* only forward edge can be bridges 
+* the array low[x] symbolizes the min time of x's anchector
+* if low[child] > low[parent] that means child is not connected with any of their anchestors
+
+
+ll intime;
+ll low[MAX],in[MAX];
+bool vis[MAX];
+
+void dfs(ll x,ll par)
+{
+    vis[x] = 1;
+
+    intime++;
+
+    low[x] = in[x] = intime;
+
+    for(auto child : ad[x])
+    {
+
+        if(child == par) continue;
+
+        if(vis[child]) // back edge
+        {
+            low[x] = min(low[x],in[child]);
+        }
+        else// forward edge
+        {
+
+            dfs(child,x);
+
+            low[x] = min(low[x],low[child]);
+
+            if(low[child] > in[x])
+            {
+                cout << "Bridge  " << x << " " << child << endl;
+
+            }
+
+
+        }
+    }
+}

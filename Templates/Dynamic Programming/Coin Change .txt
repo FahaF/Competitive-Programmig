@@ -1,0 +1,70 @@
+#include<bits/stdc++.h>
+using namespace std;
+int coin(int coins[], int tc, int total)//tc=total coin
+{
+    int t[tc+1][total+1];
+    for(int j=0; j<=tc; j++)
+    {
+        for(int i=0; i<=total; i++)
+        {
+            if(j==0)t[j][i]=0;
+            else
+                if(i==0)t[j][i]=1;
+                else
+                    if(coins[j-1] > i)t[j][i]=t[j-1][i];
+                    else {
+                        int a= t[j-1][i];//with out taking the jth coins
+                        int  b=t[j][i-coins[j-1]];//taking the jth coin
+                        t[j][i]=a+b;
+                    }
+        }
+    }
+    return t[tc][total];
+}
+int howmany(int coins[], int tc, int total )//it prints the minimun number of coin required
+{
+    int h[total+1],i,j,mark[total+1];
+    h[0]=0;
+    mark[0]=-1;
+    for(i=1; i<=total ; i++) {
+        h[i]=1e6;
+        mark[i]=-1;
+    }
+    for( j=0; j<tc; j++) {
+        for( i=1; i<=total ; i++)
+        {
+            int mm=h[i];
+            if(coins[j]<=i)
+            {
+                h[i]=min(h[i],1+h[i-coins[j]]);//h[i]=not picking
+                //1+h[i-coins[j]]) = picking
+            }
+            if(mm!=h[i])mark[i]=j;
+        }
+    }
+    cout<<"USed coins "<<endl;
+    i=total;
+    while(1)
+    {
+        if(mark[i]!=-1)
+        {
+            cout<<coins[mark[i]]<<" ";
+            i=i-coins[mark[i]];
+        }
+        if(i<=0)break;
+    }
+    cout<<endl;
+    cout<<"How many coin used : ";
+    return h[total];
+}
+
+int main()
+{
+    int i,j,k,l,m,n;
+    int coins[]= {7,2,3,6};
+    while(scanf("%d",&n)!=EOF)
+    {
+        cout<<"Ways : "<<coin(coins,4,n)<<endl;
+        cout<<howmany(coins,4,n)<<endl;
+    }
+}

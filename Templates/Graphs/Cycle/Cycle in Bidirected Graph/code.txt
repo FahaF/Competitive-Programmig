@@ -1,0 +1,29 @@
+int cycle_start, cycle_end;
+int color[MAX];
+int parent[MAX];
+
+bool dfs(int v, int par)   // passing vertex and its parent vertex
+{
+    color[v] = 1;
+    for (int u : adj[v])
+    {
+        if(u == par) continue; // skipping edge to parent vertex
+        if (color[u] == 0)
+        {
+            parent[u] = v;
+            if (dfs(u, parent[u]))
+                return true;
+        }
+        else if (color[u] == 1) // // it means u is already in the recursion stack and so there is a cycle
+        {
+            cycle_end = v;
+            cycle_start = u;
+            return true;
+        }
+    }
+    color[v] = 2; // removing v from the recursion stack
+
+    return false;
+}
+
+
