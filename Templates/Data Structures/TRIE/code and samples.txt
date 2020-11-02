@@ -139,63 +139,72 @@ Given an array of positive integers you have to print the number of subarrays wh
 
 --------------------------------------------------------------------------------------------------------
 
+#include<bits/stdc++.h>
+using namespace std;
 #define maxn 50000
 const int SIZE=maxn*50;
-int n;
-int best,sz;
-struct node
-{
-    int pre,edword;
-    int nxt[4];
-};
-int has(char ch)
-{
-    if(ch=='A')return 0;
-    if(ch=='G')return 1;
-    if(ch=='C')return 2;
-    return 3;
-}
-node trie[SIZE+1];
-void add(string s)
+ 
+//trie
+int trie[SIZE+1][2];
+int cnt[SIZE+1];
+int sz=1,KK;
+void add(int n)
 {
     int i,p=1;
-    int _size = s.size();
-    for(i=0; i<_size; i++)
+    int has;
+    for(i=31; i>=0; i--)
     {
-        if(!trie[p].nxt[has(s[i])])
-            trie[p].nxt[has(s[i])] = ++sz;
-        p = trie[p].nxt[has(s[i])];
-        trie[p].pre++;
+        has = (n>>i)&1;
+ 
+        if(trie[p][has]==-1)
+            trie[p][has] = ++sz;
+ 
+        p = trie[p][has];
+        cnt[p]++;
     }
-    trie[p].edword++;
 }
-
-void dfs(int level,int p)
+ 
+//****
+int solve(int n)
 {
-    if(!p)
-        return;
-    best = max(best,level*trie[p].pre);
-    for(int i =0; i<4; i++)
+    int p,q,node=1,ans=0;
+    for(int i=31; i>=0; i--)
     {
-        dfs(level+1,trie[p].nxt[i]);
+        p = (n>>i)&1;
+        q = (KK>>i)&1;
+        if(q)
+        {
+            ans+=cnt[trie[node][p]];
+            node = trie[node][p^1];
+        }
+        else
+        {
+            node = trie[node][p];
+        }
     }
+    return ans;
 }
 int main()
 {
-    int T;
-    cin>>T;
-    for(int kase=1; kase<=T; kase++)
+    int t,a,cur,n;
+    cin>>t;
+    while(t--)
     {
-        scanf("%d",&n);
-        memset(trie,0,sizeof(trie));
-        sz = 1;
-        string s;
-        for(int i=1; i<=n; i++)
+        cin>>n>>KK;
+        cur = 0;
+        memset(trie,-1,sizeof trie);
+        memset(cnt,0,sizeof cnt);
+        sz=1;
+        add(cur);
+        long long int res = 0;
+        while(n--)
         {
-            cin>>s;
-            add(s);
+            cin>>a;
+            cur^=a;
+            res += solve(cur);
+             add(cur);
         }
-      best = 0;
-        dfs(0,1);
-       printf("Case %d: %lld\n",kase,best);
-    }}
+        cout<<res<<endl;
+    }
+}
+ 
