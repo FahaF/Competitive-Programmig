@@ -1,3 +1,5 @@
+// maximum spanning tree
+
 #include<bits/stdc++.h>
 using namespace std;
 typedef long long ll;
@@ -63,7 +65,7 @@ void unioN(ll x,ll y)
 
 int main()
 {
-    ll i,j,t,k,l,m,n,u,v,w,mst;
+    ll i,j,t,k,l,m,n,u,v,w,ans;
     ll tc = 1;
 
     cin>>t;
@@ -72,7 +74,7 @@ int main()
     {
         cin >> n >> m;
 
-        mst = 0;
+        ans = 1e18;
 
         pair<ll,pll>p[m+10];
 
@@ -86,7 +88,8 @@ int main()
         }
 
        sort(p,p+m);
-      
+       reverse(p,p+m);
+
 
        for(i=0;i<m;i++)
        {
@@ -99,12 +102,12 @@ int main()
            {
                unioN(u,v);
 
-               mst += w;
+               ans = min(ans,w);
 
            }
        }
 
-       cout <<"Case #"<<tc<<": "<<mst << endl;
+       cout <<"Case #"<<tc<<": "<<ans << endl;
 
        tc++;
     }
