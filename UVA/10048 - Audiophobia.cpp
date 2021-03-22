@@ -1,5 +1,4 @@
-// complexity : elogv
-
+//Floyd Warshall
 
 #include<bits/stdc++.h>
 using namespace std;
@@ -8,7 +7,7 @@ typedef long long ll;
 #define        lcm(a,b)   ((a*b)/__gcd(a,b))
 #define        optimize    ios_base::sync_with_stdio(false);cin.tie(NULL);
 #define        sqr(a)       ((a)*(a))
-#define         MAX        250000
+#define         MAX        15000
 #define         max5        100000
 #define         max6        1000000
 #define         mod       1000000007
@@ -36,79 +35,64 @@ typedef long long ll;
 #define        ei(x)      cerr << #x << ": " << x << " " << endl;
 #define         PI         acos(-1)
 
-ll par[MAX];
-
-
-ll finD(ll x)
-{
-    if(x == par[x])return x;
-
-    return par[x] = finD(par[x]);
-
-}
-
-void unioN(ll x,ll y)
-{
-    ll a,b;
-
-    a = finD(x);
-    b = finD(y);
-
-    if(a!=b)
-    {
-        if(a>b)swap(a,b);
-        par[b] = a;
-    }
-
-    return;
-}
-
 
 int main()
 {
-    ll i,j,t,k,l,m,n,u,v,w,mst;
-    ll tc = 1;
-
-    cin>>t;
-
-    while(t--)
+    ll i,j,k,l,m,n,u,v,w,q;
+    int cs = 1;
+    while(1)
     {
-        cin >> n >> m;
 
-        mst = 0;
+        cin >> n >> m >> q;
 
-        pair<ll,pll>p[m+10];
+        if(n+m+q == 0)break;
 
-        for(i=1;i<=n;i++)par[i] = i;
+
+        ll ans[n+10][n+10];
+
+        for(i=1; i<=n; i++)for(j=1; j<=n; j++)ans[i][j]=1e18;
+
+
 
         for(i=0; i<m; i++)
         {
             cin >> u >> v >> w;
-
-            p[i] = {w,{u,v}};
+            ans[u][v] = min(ans[u][v],w);
+            ans[v][u] = min(ans[v][u],w);
         }
 
-       sort(p,p+m);
-      
 
-       for(i=0;i<m;i++)
-       {
-           u = p[i].S.F;
-           v = p[i].S.S;
-           w = p[i].F;
+        for (k = 1; k <= n; ++k)
+        {
+            for (i = 1; i <= n; ++i)
+            {
+                for (j = 1; j <= n; ++j)
+                {
+
+                        ans[i][j] = min(ans[i][j],max(ans[i][k],ans[k][j]));
+
+                }
+            }
+        }
+
+        if(cs>1)cout<<endl;
+
+        cout << "Case #"<<cs<< endl;
 
 
-           if(finD(u)!=finD(v))
-           {
-               unioN(u,v);
+        while(q--)
+        {
+            cin >> u >> v;
 
-               mst += w;
+            if(ans[u][v] == 1e18)cout << "no path" << endl;
+            else
+            {
+                cout << ans[u][v] << endl;
+            }
 
-           }
-       }
 
-       cout <<"Case #"<<tc<<": "<<mst << endl;
+        }
 
-       tc++;
+        cs++;
     }
 }

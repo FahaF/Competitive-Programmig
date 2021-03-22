@@ -1,6 +1,3 @@
-// complexity : elogv
-
-
 #include<bits/stdc++.h>
 using namespace std;
 typedef long long ll;
@@ -8,7 +5,7 @@ typedef long long ll;
 #define        lcm(a,b)   ((a*b)/__gcd(a,b))
 #define        optimize    ios_base::sync_with_stdio(false);cin.tie(NULL);
 #define        sqr(a)       ((a)*(a))
-#define         MAX        250000
+#define         MAX        200003
 #define         max5        100000
 #define         max6        1000000
 #define         mod       1000000007
@@ -66,49 +63,74 @@ void unioN(ll x,ll y)
 
 int main()
 {
-    ll i,j,t,k,l,m,n,u,v,w,mst;
-    ll tc = 1;
+    ll i,j,k,l,m,n,u,v,w,ans=0,bl,wh,t,tot=0;
 
-    cin>>t;
+    bl = wh = 0;
 
-    while(t--)
+    cin >> n >> m >> k;
+
+    ans = 0;
+
+    pair<ll,pll>sada[m+10];
+    pair<ll,pll>kalo[m+10];
+
+    for(i=1; i<=n; i++)par[i] = i;
+
+    for(i=0; i<m; i++)
     {
-        cin >> n >> m;
+        cin >> u >> v >> w >> t;
 
-        mst = 0;
+        if(t==1)
+            sada[wh] = {w,{u,v}},wh++;
+        else kalo[bl] = {w,{u,v}},bl++;
+    }
 
-        pair<ll,pll>p[m+10];
+    sort(sada,sada+wh);
 
-        for(i=1;i<=n;i++)par[i] = i;
+    if(wh < k)return cout << -1 << endl,0;
 
-        for(i=0; i<m; i++)
+    for(i=0; i<wh; i++)
+    {
+        u = sada[i].S.F;
+        v = sada[i].S.S;
+        w = sada[i].F;
+        if(finD(u)!=finD(v))
         {
-            cin >> u >> v >> w;
+            unioN(u,v);
 
-            p[i] = {w,{u,v}};
+            ans += w;
+
+            tot++;
+
+        }
+        if(tot == n-1 || tot == k)break;
+    }
+
+    if(tot<n-1)
+    {
+        sort(kalo,kalo+bl);
+
+        for(i=0; i<bl; i++)
+        {
+            u = kalo[i].S.F;
+            v = kalo[i].S.S;
+            w = kalo[i].F;
+            if(finD(u)!=finD(v))
+            {
+                unioN(u,v);
+                ans += w;
+                tot++;
+            }
+
         }
 
-       sort(p,p+m);
-      
-
-       for(i=0;i<m;i++)
-       {
-           u = p[i].S.F;
-           v = p[i].S.S;
-           w = p[i].F;
-
-
-           if(finD(u)!=finD(v))
-           {
-               unioN(u,v);
-
-               mst += w;
-
-           }
-       }
-
-       cout <<"Case #"<<tc<<": "<<mst << endl;
-
-       tc++;
     }
+
+    if(tot != n-1)ans = -1;
+
+    cout <<ans << endl;
+
+
 }
+
+

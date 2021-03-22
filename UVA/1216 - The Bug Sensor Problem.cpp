@@ -1,4 +1,4 @@
-// complexity : elogv
+//minimum spanning forest
 
 
 #include<bits/stdc++.h>
@@ -8,7 +8,7 @@ typedef long long ll;
 #define        lcm(a,b)   ((a*b)/__gcd(a,b))
 #define        optimize    ios_base::sync_with_stdio(false);cin.tie(NULL);
 #define        sqr(a)       ((a)*(a))
-#define         MAX        250000
+#define         MAX        1000009
 #define         max5        100000
 #define         max6        1000000
 #define         mod       1000000007
@@ -37,6 +37,9 @@ typedef long long ll;
 #define         PI         acos(-1)
 
 ll par[MAX];
+ll x[MAX];
+ll y[MAX];
+pair<ll,pll>p[MAX];
 
 
 ll finD(ll x)
@@ -66,49 +69,67 @@ void unioN(ll x,ll y)
 
 int main()
 {
-    ll i,j,t,k,l,m,n,u,v,w,mst;
-    ll tc = 1;
+    ll i,j,t,k,l,m,n,u,v,w,ans,component;
+
 
     cin>>t;
 
     while(t--)
     {
-        cin >> n >> m;
+        cin >> component;
 
-        mst = 0;
+        n = m = 0;
 
-        pair<ll,pll>p[m+10];
+        while(1)
+        {
+            cin >> u ;
+            if(u==-1)break;
+            cin>>v ;
+            x[n] = u;
+            y[n] = v;
+            n++;
+        }
 
-        for(i=1;i<=n;i++)par[i] = i;
+        for(i=1; i<=n; i++)
+        {
+            for(j=i+1; j<=n; j++)
+            {
+                w = (x[i-1]-x[j-1])*(x[i-1]-x[j-1]) + (y[i-1]-y[j-1])*(y[i-1]-y[j-1]);
+                p[m] = {w,{i,j}};
+                m++;
+            }
+        }
+
+        sort(p,p+m);
+
+        for(i=0; i<=n; i++)par[i] = i;
+
+        ll kota = n;
 
         for(i=0; i<m; i++)
         {
-            cin >> u >> v >> w;
+            u = p[i].S.F;
+            v = p[i].S.S;
+            w = p[i].F;
 
-            p[i] = {w,{u,v}};
+            if(finD(u)!=finD(v))
+            {
+                unioN(u,v);
+                kota--;
+
+            }
+
+            if(kota<=component)
+            {
+                cout << ceil(sqrt(w)) << endl;
+                break;
+            }
+
         }
 
-       sort(p,p+m);
-      
 
-       for(i=0;i<m;i++)
-       {
-           u = p[i].S.F;
-           v = p[i].S.S;
-           w = p[i].F;
-
-
-           if(finD(u)!=finD(v))
-           {
-               unioN(u,v);
-
-               mst += w;
-
-           }
-       }
-
-       cout <<"Case #"<<tc<<": "<<mst << endl;
-
-       tc++;
     }
+
+
 }
+
