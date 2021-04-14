@@ -207,4 +207,173 @@ int main()
         cout<<res<<endl;
     }
 }
+
+
+Trie Delete cf 923C
+-----------------------------------------------------------------------------------------------------
+
+
+#include<bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+
+
+#define maxn 300002
+const ll SIZE=maxn*50;
+ll trie[SIZE+1][3];
+ll cnt[maxn];
+
+ll sz=1;
+void add(ll n)
+{
+    ll i,p=1;
+    ll has;
+    for(i=31; i>=0; i--)
+    {
+        has = (n>>i)&1;
+
+        if(trie[p][has]==-1)
+            trie[p][has] = ++sz;
+
+
+         p = trie[p][has];
+
+         cnt[p]++;
+
+
+    }
+}
+
+ll find_min(ll n)
+{
+    ll nxt,p=1,val=0;
+    for(ll j=31; j>=0; j--)
+    {
+        nxt = (n>>j)&1;
+
+        if(trie[p][nxt]!=-1&&cnt[trie[p][nxt]]>0)
+        {
+            p = trie[p][nxt];
+            cnt[p]--;
+
+        }
+        else
+        {
+
+            val+=pow(2,j);
+            p = trie[p][nxt^1];
+            cnt[p]--;
+        }
+
+    }
+    return val;
+}
+
+
+int main()
+{
+
+    ios_base::sync_with_stdio(false);cin.tie(NULL);
+
+     ll i,j,k,l,m,n,t;
+
+    cin >> n;
+    ll ar[n+10];
+    ll br[n+10];
+
+    memset(trie,-1,sizeof trie);
+
+    for(i=0;i<n;i++)cin >> ar[i];
+    for(i=0;i<n;i++)cin >> br[i];
+
+    for(i=0;i<n;i++)add(br[i]);
+
+    for(i=0;i<n;i++)
+    {
+       // bad=0;
+        cout << find_min(ar[i]) << " ";
+
+    }
+
+    cout << endl;
+}
+
+
+another sample of delete 
+
+--------------------------------------------------------------------------------------
+
+#include "bits/stdc++.h"
+using namespace std;
+ 
+const int maxn = 400005;
+ 
+int a[maxn], b[maxn];
+int n;
+int t[maxn * 31][2];
+int cnt[maxn * 31];
+int node = 0;
+ 
+void insert(int x){
+  int cur = 0;
+  for(int i = 30; i >= 0; --i){ 
+    int bit = (x >> i) & 1;
+    if(!t[cur][bit]){
+      t[cur][bit] = ++node;
+    }
+    cnt[t[cur][bit]]++;
+    cur = t[cur][bit];
+  }
+}
+ 
+int query(int x){
+  int cur = 0, ret = 0;
+  for(int i = 30; i >= 0; --i){
+    int bit = (x >> i) & 1;
+    if(t[cur][bit] && cnt[t[cur][bit]] > 0){
+      cur = t[cur][bit];
+      if(bit)ret |= (1 << i);
+    }else if(t[cur][bit ^ 1] && cnt[t[cur][bit ^ 1]] > 0){
+      if(bit ^ 1){
+        ret |= (1 << i);
+      }
+      cur = t[cur][bit ^ 1];
+    }else {
+      return 0;
+    }
+  }
+  return ret;
+}
+ 
+void del(int x){
+  int cur = 0;
+  for(int i = 30; i >= 0; --i){
+    int bit = (x >> i) & 1;
+    if(!t[cur][bit]){
+      t[cur][bit] = ++node;
+    }
+    cnt[t[cur][bit]]--;
+    cur = t[cur][bit];
+  }
+}
+ 
+int main(int argc, char const *argv[])
+{
+  scanf("%d", &n);
+  for(int i = 1; i <= n; ++i){
+    scanf("%d", &a[i]);
+  }
+  for(int i = 1; i <= n; ++i){
+    scanf("%d", &b[i]);
+    insert(b[i]);
+  }
+  for(int i = 1; i <= n; ++i){
+    int x = query(a[i]);
+    printf("%d ", (a[i] ^ x));
+    del(x);
+  }
+ 
+  return 0;
+}
+
  
